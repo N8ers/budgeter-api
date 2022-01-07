@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "migrate-up": "knex migrate:up",
-    "migrate-down": "knex migrate:down"
+    "migrate-down": "knex migrate:down",
+    "seed": "knex seed:run"
   },
   "author": "",
   "license": "ISC",
