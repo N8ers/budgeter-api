@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const routes = {
-  // user: require('./user.routes')
+  user: require("./user.routes.js"),
 };
 
 const app = express();
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
   res.status(200).send("new setup works");
 });
 
-// app.use("/user", routes.user)
+app.use("/user", routes.user);
 
 // catch all routes that don't exist
 app.get("*", function (req, res) {
