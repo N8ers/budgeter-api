@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 
 const routes = {
   user: require("./user.routes.js"),
+  expense: require("./expense.routes.js"),
 };
 
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", routes.user);
+app.use("/expense", routes.expense);
 
 // catch all routes that don't exist
 app.get("*", function (req, res) {
