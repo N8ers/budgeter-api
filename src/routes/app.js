@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const routes = {
-  user: require("./user.routes.js"),
-  expense: require("./expense.routes.js"),
-  vendor: require("./vendor.routes.js"),
+  users: require("./user.routes.js"),
+  expenses: require("./expense.routes.js"),
+  vendors: require("./vendor.routes.js"),
 };
 
 const app = express();
@@ -25,9 +25,9 @@ app.get("/", (req, res) => {
   res.status(200).send("new setup works");
 });
 
-app.use("/user", routes.user);
-app.use("/expense", routes.expense);
-app.use("/vendor", routes.vendor);
+app.use("/users", routes.users);
+app.use("/expenses", routes.expenses);
+app.use("/vendors", routes.vendors);
 
 // catch all routes that don't exist
 app.get("*", function (req, res) {
