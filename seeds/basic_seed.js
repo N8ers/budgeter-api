@@ -1,9 +1,35 @@
 exports.seed = async function (knex) {
-  // Deletes ALL existing entries
-  await knex("expense").del();
-  await knex("vendor").del();
-  await knex("user").del();
+  // Drop all tables
+  await knex.schema.dropTableIfExists("expense");
+  await knex.schema.dropTableIfExists("vendor");
+  await knex.schema.dropTableIfExists("user");
 
+  // Create tables
+  await knex.schema.createTable("user", function (table) {
+    table.increments("id").primary();
+    table.string("name", 225).notNullable();
+  });
+
+  await knex.schema.createTable("vendor", function (table) {
+    table.increments("id").primary();
+    table.string("name", 225);
+    table.integer("user_id").unsigned().notNullable();
+    table.foreign("user_id").references("id").inTable("user");
+  });
+
+  await knex.schema.createTable("expense", function (table) {
+    table.increments("id").primary();
+    table.string("description");
+    table.string("type");
+    table.date("date");
+    table.float("ammount");
+    table.integer("user_id").unsigned().notNullable();
+    table.integer("vendor_id").unsigned().notNullable();
+    table.foreign("user_id").references("id").inTable("user");
+    table.foreign("vendor_id").references("id").inTable("vendor");
+  });
+
+  // Populate tables
   const users = await knex("user")
     .returning(["id", "name"])
     .insert([{ name: "Tsuki" }, { name: "Goon" }, { name: "Joe" }]);
