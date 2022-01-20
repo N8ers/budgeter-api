@@ -1,3 +1,5 @@
+const { format, parseISO, isValid } = require("date-fns/fp");
+
 const knex = require("../../config/config");
 
 const router = require("express").Router();
@@ -15,11 +17,27 @@ router.get("/:id", async (req, res) => {
   res.status(200).send(result);
 });
 
+function formatAndValidateDate(date) {
+  // Format to YYYY-MM-DD for Postgres
+  if (!date) return null;
+
+  const dateIsValid = isValid(new Date(date));
+  console.log("dateIsValid ", dateIsValid);
+
+  // const parsedDate = parseISO(date);
+  // console.log("parsedDate ", parsedDate);
+  // if (parsedDate === "Invalid Date") {
+  //   console.log("INVALID DATE - should send like a 400 (or something)");
+  // }
+  // const formattedDate = format(parsedDate, "y-M-d");
+  // console.log("formattedDate ", formattedDate);
+}
+
 // Get User Expenses
 router.get("/:id/expenses", async (req, res) => {
   const userId = req.params.id;
-  const startDate = req.query.startDate;
-  const endDate = req.query.endDate;
+  const startDate = formatAndValidateDate(req.query.startDate);
+  // const endDate = formatAndValidateDate(req.query.endDate);
 
   // Abstract this middleware/validation stuff
   if ((startDate && !endDate) || (!startDate && endDate)) {
@@ -32,18 +50,19 @@ router.get("/:id/expenses", async (req, res) => {
 
   if (startDate && endDate) {
     // validate date format
+    query("startDate").isDate();
   }
 
-  if (startDate && endDate) {
-    // probably put this in a controller too?
-    // const userExpenses = await knex
-    //   .select("*")
-    //   .from("expense")
-    //   .where({ user_id: userId })
-    //   .where("date", ">=", startDate)
-    //   .where("date", "<=", endDate);
-    // console.log("userExpenses ", userExpenses);
-  }
+  // probably put this in a controller too?
+  // if (startDate && endDate) {
+  //   const userExpenses = await knex
+  //     .select("*")
+  //     .from("expense")
+  //     .where({ user_id: userId })
+  //     .where("date", ">=", startDate)
+  //     .where("date", "<=", endDate);
+  //   console.log("userExpenses ", userExpenses);
+  // }
 
   // put this in a controller?
   const userExpenses = await knex
