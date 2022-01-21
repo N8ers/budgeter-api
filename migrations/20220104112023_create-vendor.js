@@ -4,7 +4,6 @@ exports.up = function (knex) {
     table.string("name", 225);
 
     table.integer("user_id").unsigned().notNullable();
-
     table.foreign("user_id").references("id").inTable("user");
   });
 };
