@@ -1,6 +1,7 @@
 exports.seed = async function (knex) {
   // Drop all tables
   await knex.schema.dropTableIfExists("expense");
+  await knex.schema.dropTableIfExists("category");
   await knex.schema.dropTableIfExists("vendor");
   await knex.schema.dropTableIfExists("user");
 
@@ -17,19 +18,30 @@ exports.seed = async function (knex) {
     table.foreign("user_id").references("id").inTable("user");
   });
 
+  await knex.schema.createTable("category", function (table) {
+    table.increments("id").primary();
+    table.string("name", 225);
+    table.integer("user_id").unsigned().notNullable();
+    table.foreign("user_id").references("id").inTable("user");
+  });
+
   await knex.schema.createTable("expense", function (table) {
     table.increments("id").primary();
     table.string("description");
     table.string("type");
     table.date("date");
     table.float("ammount");
+
     table.integer("user_id").unsigned().notNullable();
     table.integer("vendor_id").unsigned().notNullable();
+    table.integer("category_id").unsigned().notNullable();
+
     table.foreign("user_id").references("id").inTable("user");
     table.foreign("vendor_id").references("id").inTable("vendor");
+    table.foreign("category_id").references("id").inTable("category");
   });
 
-  // Populate tables
+  // // Populate tables
   const users = await knex("user")
     .returning(["id", "name"])
     .insert([{ name: "Tsuki" }, { name: "Goon" }, { name: "Joe" }]);
@@ -47,30 +59,41 @@ exports.seed = async function (knex) {
 
   console.log("generated vendors: ", vendors);
 
+  const categories = await knex("category")
+    .returning(["id", "name", "user_id"])
+    .insert([
+      { name: "Groceries", user_id: users[1].id },
+      { name: "Health", user_id: users[1].id },
+      { name: "Clothes", user_id: users[2].id },
+      { name: "Other", user_id: users[2].id },
+    ]);
+
+  console.log("generated categories: ", categories);
+
   const expenses = await knex("expense")
     .returning("*")
     .insert([
       {
         description: "mac-mini",
-        type: "other",
         date: new Date("Jan 8, 2022").toISOString(),
         ammount: 769.0,
+        category_id: categories[3].id,
         user_id: users[2].id,
         vendor_id: vendors[3].id,
       },
       {
         description: "bath bombs",
-        type: "health",
         date: new Date("Jan 8, 2022").toISOString(),
         ammount: 769.0,
+        category_id: categories[2].id,
         user_id: users[1].id,
         vendor_id: vendors[1].id,
       },
       {
         description: "general groceries",
-        type: "groceries",
         date: new Date("Jan 2, 2022").toISOString(),
         ammount: 769.0,
+        category_id: categories[0].id,
         user_id: users[1].id,
         vendor_id: vendors[0].id,
       },
@@ -79,6 +102,7 @@ exports.seed = async function (knex) {
         type: "clothes",
         date: new Date("Jan 2, 2022").toISOString(),
         ammount: 769.0,
+        category_id: categories[2].id,
         user_id: users[2].id,
         vendor_id: vendors[2].id,
       },
