@@ -1,4 +1,4 @@
-const { format, parseISO, isValid } = require("date-fns/fp");
+const { format, parseISO, isMatch } = require("date-fns");
 
 const knex = require("../../config/config");
 
@@ -17,12 +17,34 @@ router.get("/:id", async (req, res) => {
   res.status(200).send(result);
 });
 
+function formatIsCorrect(date) {
+  const units = date.split("-");
+  console.log({ units });
+  console.log("unites.lenght ", units.length);
+  if (units.length !== 3) {
+    console.log("INCORRECT FORMAT");
+  }
+
+  if (units[0].length !== 4) {
+    console.log("INCORRECT YEAR");
+  } else if (units[1].length !== 2) {
+    console.log("INCORRECT MONTH");
+  } else if (units[2].length !== 2) {
+    console.log("INCORRECT DAY");
+  }
+}
+
 function formatAndValidateDate(date) {
   // Format to YYYY-MM-DD for Postgres
   if (!date) return null;
 
-  const dateIsValid = isValid(new Date(date));
-  console.log("dateIsValid ", dateIsValid);
+  formatIsCorrect(date);
+
+  console.log("date ", date.toString());
+  const format = "yyyy-MM-dd";
+  console.log("format ", format);
+  const match = isMatch(date, format);
+  console.log("match ", match);
 
   // const parsedDate = parseISO(date);
   // console.log("parsedDate ", parsedDate);
@@ -37,7 +59,7 @@ function formatAndValidateDate(date) {
 router.get("/:id/expenses", async (req, res) => {
   const userId = req.params.id;
   const startDate = formatAndValidateDate(req.query.startDate);
-  // const endDate = formatAndValidateDate(req.query.endDate);
+  const endDate = formatAndValidateDate(req.query.endDate);
 
   // Abstract this middleware/validation stuff
   if ((startDate && !endDate) || (!startDate && endDate)) {
@@ -47,6 +69,8 @@ router.get("/:id/expenses", async (req, res) => {
         "You must specify a startDate and endDate if you want to filter by date."
       );
   }
+
+  // filter on category too!
 
   if (startDate && endDate) {
     // validate date format
