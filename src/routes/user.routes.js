@@ -1,4 +1,6 @@
 const { format, parseISO, isMatch } = require("date-fns");
+const { append } = require("express/lib/response");
+const res = require("express/lib/response");
 
 const knex = require("../../config/config");
 
@@ -17,51 +19,33 @@ router.get("/:id", async (req, res) => {
   res.status(200).send(result);
 });
 
-function formatIsCorrect(date) {
-  const units = date.split("-");
-  console.log({ units });
-  console.log("unites.lenght ", units.length);
-  if (units.length !== 3) {
-    console.log("INCORRECT FORMAT");
-  }
-
-  if (units[0].length !== 4) {
-    console.log("INCORRECT YEAR");
-  } else if (units[1].length !== 2) {
-    console.log("INCORRECT MONTH");
-  } else if (units[2].length !== 2) {
-    console.log("INCORRECT DAY");
-  }
-}
-
-function formatAndValidateDate(date) {
+const validateDateFormat = function (date) {
   // Format to YYYY-MM-DD for Postgres
-  if (!date) return null;
+  if (!date) {
+    return false;
+  }
 
-  formatIsCorrect(date);
-
-  console.log("date ", date.toString());
+  const units = date.split("-");
   const format = "yyyy-MM-dd";
-  console.log("format ", format);
-  const match = isMatch(date, format);
-  console.log("match ", match);
+  const dateFormatIsMatch = isMatch(date, format);
 
-  // const parsedDate = parseISO(date);
-  // console.log("parsedDate ", parsedDate);
-  // if (parsedDate === "Invalid Date") {
-  //   console.log("INVALID DATE - should send like a 400 (or something)");
-  // }
-  // const formattedDate = format(parsedDate, "y-M-d");
-  // console.log("formattedDate ", formattedDate);
-}
+  if (
+    units.length !== 3 ||
+    units[0].length !== 4 ||
+    units[1].length !== 2 ||
+    units[2].length !== 2 ||
+    dateFormatIsMatch
+  ) {
+    return false;
+  }
 
-// Get User Expenses
-router.get("/:id/expenses", async (req, res) => {
-  const userId = req.params.id;
-  const startDate = formatAndValidateDate(req.query.startDate);
-  const endDate = formatAndValidateDate(req.query.endDate);
+  return true;
+};
 
-  // Abstract this middleware/validation stuff
+const validateQueryParams = function (req, res, next) {
+  const startDate = req.query.startDate || null;
+  const endDate = req.query.endDate || null;
+
   if ((startDate && !endDate) || (!startDate && endDate)) {
     res
       .status(400)
@@ -70,11 +54,33 @@ router.get("/:id/expenses", async (req, res) => {
       );
   }
 
-  // filter on category too!
+  let startDateIsValid = false;
+  let endDateIsValid = false;
 
   if (startDate && endDate) {
-    // validate date format
-    query("startDate").isDate();
+    startDateIsValid = validateDateFormat(startDate);
+    endDateIsValid = validateDateFormat(endDate);
+  }
+
+  if (startDateIsValid && endDateIsValid) {
+    next();
+  } else {
+    res.status(400).send('Date is formatted incorrectly. Must be "YYYY-MM-DD"');
+  }
+};
+
+router.use(validateQueryParams);
+
+// Get User Expenses
+router.get("/:id/expenses", async (req, res) => {
+  const userId = req.params.id;
+
+  // filter on category too!
+
+  const startDate = req.query.startDate || null;
+  const endDate = req.query.endDate || null;
+  if (startDate && endDate) {
+    // add to query params
   }
 
   // probably put this in a controller too?
