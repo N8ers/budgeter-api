@@ -34,7 +34,7 @@ const validateDateFormat = function (date) {
     units[0].length !== 4 ||
     units[1].length !== 2 ||
     units[2].length !== 2 ||
-    dateFormatIsMatch
+    !dateFormatIsMatch
   ) {
     return false;
   }
@@ -74,11 +74,14 @@ router.use(validateQueryParams);
 // Get User Expenses
 router.get("/:id/expenses", async (req, res) => {
   const userId = req.params.id;
-
-  // filter on category too!
-
   const startDate = req.query.startDate || null;
   const endDate = req.query.endDate || null;
+  const category = req.query.category || null;
+
+  if (category) {
+    // filter on category too!
+  }
+
   if (startDate && endDate) {
     // add to query params
   }
@@ -95,10 +98,22 @@ router.get("/:id/expenses", async (req, res) => {
   // }
 
   // put this in a controller?
+  // const userExpenses = await knex
+  //   .select("*")
+  //   .from("expense")
+  //   .where({ user_id: userId });
+  // console.log("userExpenses ", userExpenses);
+
   const userExpenses = await knex
     .select("*")
     .from("expense")
-    .where({ user_id: userId });
+    .where({ user_id: userId })
+    .modify((queryBuilder) => {
+      if (startDate && endDate) {
+        queryBuilder.where("date", ">=", startDate);
+        queryBuilder.where("date", "<=", endDate);
+      }
+    });
   console.log("userExpenses ", userExpenses);
 
   res.status(200).send(userExpenses);
