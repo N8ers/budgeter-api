@@ -42,9 +42,35 @@ const validateDateFormat = function (date) {
   return true;
 };
 
-const validateQueryParams = function (req, res, next) {
+const validateCategoryQueryParams = async function (req, res, next) {
+  const categoryId = req.query.categoryId || null;
+  const userId = req.params.id;
+
+  if (!categoryId) {
+    return next();
+  }
+
+  const categoryIdIsValid = await knex
+    .select("*")
+    .from("category")
+    .where({ id: categoryId, user_id: userId });
+
+  if (!categoryIdIsValid.length) {
+    res
+      .status(400)
+      .send("The selected category_id is not assigned to this user.");
+  } else {
+    return next();
+  }
+};
+
+const validateDateQueryParams = function (req, res, next) {
   const startDate = req.query.startDate || null;
   const endDate = req.query.endDate || null;
+
+  if (!startDate && !endDate) {
+    return next();
+  }
 
   if ((startDate && !endDate) || (!startDate && endDate)) {
     res
@@ -63,61 +89,42 @@ const validateQueryParams = function (req, res, next) {
   }
 
   if (startDateIsValid && endDateIsValid) {
-    next();
+    return next();
   } else {
     res.status(400).send('Date is formatted incorrectly. Must be "YYYY-MM-DD"');
   }
 };
 
-router.use(validateQueryParams);
-
 // Get User Expenses
-router.get("/:id/expenses", async (req, res) => {
-  const userId = req.params.id;
-  const startDate = req.query.startDate || null;
-  const endDate = req.query.endDate || null;
-  const category = req.query.category || null;
+router.get(
+  "/:id/expenses",
+  validateDateQueryParams,
+  validateCategoryQueryParams,
+  async (req, res) => {
+    const userId = req.params.id;
+    const startDate = req.query.startDate || null;
+    const endDate = req.query.endDate || null;
+    const categoryId = req.query.categoryId || null;
 
-  if (category) {
-    // filter on category too!
+    const userExpenses = await knex
+      .select("*")
+      .from("expense")
+      .where({ user_id: userId })
+      .modify((queryBuilder) => {
+        if (startDate && endDate) {
+          queryBuilder.where("date", ">=", startDate);
+          queryBuilder.where("date", "<=", endDate);
+        }
+
+        if (categoryId) {
+          queryBuilder.where({ category_id: categoryId });
+        }
+      });
+    console.log("userExpenses ", userExpenses);
+
+    res.status(200).send(userExpenses);
   }
-
-  if (startDate && endDate) {
-    // add to query params
-  }
-
-  // probably put this in a controller too?
-  // if (startDate && endDate) {
-  //   const userExpenses = await knex
-  //     .select("*")
-  //     .from("expense")
-  //     .where({ user_id: userId })
-  //     .where("date", ">=", startDate)
-  //     .where("date", "<=", endDate);
-  //   console.log("userExpenses ", userExpenses);
-  // }
-
-  // put this in a controller?
-  // const userExpenses = await knex
-  //   .select("*")
-  //   .from("expense")
-  //   .where({ user_id: userId });
-  // console.log("userExpenses ", userExpenses);
-
-  const userExpenses = await knex
-    .select("*")
-    .from("expense")
-    .where({ user_id: userId })
-    .modify((queryBuilder) => {
-      if (startDate && endDate) {
-        queryBuilder.where("date", ">=", startDate);
-        queryBuilder.where("date", "<=", endDate);
-      }
-    });
-  console.log("userExpenses ", userExpenses);
-
-  res.status(200).send(userExpenses);
-});
+);
 
 // get user/:id/expenses?sort/filter/etc
 
