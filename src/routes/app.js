@@ -5,6 +5,7 @@ const routes = {
   users: require("./user.routes.js"),
   expenses: require("./expense.routes.js"),
   vendors: require("./vendor.routes.js"),
+  category: require("./category.routes.js"),
 };
 
 const app = express();
@@ -28,10 +29,11 @@ app.get("/", (req, res) => {
 app.use("/users", routes.users);
 app.use("/expenses", routes.expenses);
 app.use("/vendors", routes.vendors);
+app.use("/category", routes.category);
 
 // catch all routes that don't exist
 app.get("*", function (req, res) {
-  res.status(404).send("route does not exist");
+  res.status(404).send("no such route exists");
 });
 
 module.exports = app;
