@@ -3,46 +3,41 @@ const knex = require("../../config/config");
 const router = require("express").Router();
 
 const validateSortQueryParam = function (req, res, next) {
-  // ex) /expenses?sortBy=date&orderBy=desc
-  // with out orderBy we default to asc
+  // ex) /expenses?sort=-date (desc)
+  // ex) /expenses?sort=date (asc)
 
-  const sortByOptions = ["date"];
-  const orderByOptions = ["asc", "desc"];
+  // we need to learn more about what needs validation here...
+  // do we specify fields here? make a model schema like `queryFields?`
+  // can we grab fields in the expense table, and check if they match the sort
 
-  const sortBy = req?.query?.sortBy;
-  const orderBy = req?.query?.orderBy;
+  const sortBy = req?.query?.sort;
 
   if (!sortBy) {
     return next();
   }
 
-  // if sortBy not in sortByOptions send('bad sort')
-  if (!sortByOptions.includes(sortBy)) {
-    res
-      .status(400)
-      .send(`sortBy only supports the following options: ${sortByOptions}`);
-  }
+  // res.status(500).send(`there was a problem sorting by ${sortBy}: ${error}`);
 
-  // if orderBy && orderBy not in orderByOptions send('bad order by')
-  if (orderBy && !orderByOptions.includes(orderBy)) {
-    res
-      .status(400)
-      .send(`orderBy only supports the following options: ${orderByOptions}`);
-  }
-
-  // make case for returning next() - maybe a `const sortingIsValid;`?
+  next();
 };
 
 router.get("/", validateSortQueryParam, async (req, res) => {
+  const sortBy = req?.query?.sort;
+
   const result = await knex
     .select("*")
     .from("expense")
     .modify((queryBuilder) => {
-      // if (sortBy) {
-      // }
+      if (sortBy) {
+        const sortByIndexZero = sortBy.split("")[0];
+        if (sortByIndexZero === "-") {
+          queryBuilder.orderBy(sortBy.substring(1), "desc");
+        } else {
+          queryBuilder.orderBy(sortBy, "asc");
+        }
+      }
     });
 
-  console.log("expenses ", result);
   res.status(200).send(result);
 });
 
