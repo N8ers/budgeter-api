@@ -64,7 +64,7 @@ const validateCategoryQueryParams = async function (req, res, next) {
   }
 };
 
-const validateDateQueryParams = function (req, res, next) {
+const validateDateRangeQueryParams = function (req, res, next) {
   const startDate = req.query.startDate || null;
   const endDate = req.query.endDate || null;
 
@@ -98,7 +98,7 @@ const validateDateQueryParams = function (req, res, next) {
 // Get User Expenses
 router.get(
   "/:id/expenses",
-  validateDateQueryParams,
+  validateDateRangeQueryParams,
   validateCategoryQueryParams,
   async (req, res) => {
     const userId = req.params.id;
