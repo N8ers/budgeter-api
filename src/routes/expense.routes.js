@@ -2,13 +2,9 @@ const knex = require("../../config/config");
 
 const router = require("express").Router();
 
-const validateSortQueryParam = function (req, res, next) {
+const validateSortQueryParam = async function (req, res, next) {
   // ex) /expenses?sort=-date (desc)
-  // ex) /expenses?sort=date (asc)
-
-  // we need to learn more about what needs validation here...
-  // do we specify fields here? make a model schema like `queryFields?`
-  // can we grab fields in the expense table, and check if they match the sort
+  // ex) /expenses?sort=date  (asc)
 
   const sortBy = req?.query?.sort;
 
@@ -16,9 +12,16 @@ const validateSortQueryParam = function (req, res, next) {
     return next();
   }
 
-  // res.status(500).send(`there was a problem sorting by ${sortBy}: ${error}`);
+  // obviously hardcoding the tableName is bad... what is a better/generic way?
+  const tableName = "expense";
+  const columnName = sortBy.charAt(0) === "-" ? sortBy.substring(1) : sortBy;
+  const columnExists = await knex.schema.hasColumn(tableName, columnName);
 
-  next();
+  if (!columnExists) {
+    res.status(400).send(`The column "${sortBy}" cannot be sorted on.`);
+  } else {
+    return next();
+  }
 };
 
 router.get("/", validateSortQueryParam, async (req, res) => {
