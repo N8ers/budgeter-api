@@ -4,11 +4,14 @@ const router = require("express").Router();
 
 router.get("/", async (req, res) => {
   const sortBy = req?.query?.sort;
+  const limit = req?.query?.limit || 5;
+  const offset = req?.query?.offset || 1;
 
   const result = await knex
     .select("*")
     .from("expense")
     .modify((queryBuilder) => {
+      // Sorting
       if (sortBy) {
         // ex) /expenses?sort=-date (desc)
         // ex) /expenses?sort=date  (asc)
@@ -19,20 +22,13 @@ router.get("/", async (req, res) => {
           queryBuilder.orderBy(sortBy, "asc");
         }
       }
+      // Pagination
+      queryBuilder.limit(limit).offset(offset);
     })
-    .then((result) => result)
     .catch((error) => {
       res.status(500).send(`${error.message}. \n${error.hint}`);
     });
 
-  res.status(200).send(result);
-});
-
-router.get("/raw-test", async (req, res) => {
-  // const result = await knex.raw("SELECT * FROM :table", [{ table: "expense" }]);
-  const result = await knex.schema.raw("SELECT * FROM expense", []);
-  console.log({ result });
-  result.fields.forEach((field) => console.log(field.name));
   res.status(200).send(result);
 });
 
