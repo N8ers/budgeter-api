@@ -2,8 +2,9 @@ const knex = require("../../config/config");
 
 const router = require("express").Router();
 
-router.get("/", async (req, res) => {
-  const sortBy = req?.query?.sort;
+const { sortQueryBuilder } = require("../../middleware/sort");
+
+router.get("/", sortQueryBuilder, async (req, res) => {
   const limit = req?.query?.limit || 5;
   const offset = req?.query?.offset || 1;
 
@@ -12,15 +13,8 @@ router.get("/", async (req, res) => {
     .from("expense")
     .modify((queryBuilder) => {
       // Sorting
-      if (sortBy) {
-        // ex) /expenses?sort=-date (desc)
-        // ex) /expenses?sort=date  (asc)
-        const sortByIndexZero = sortBy.split("")[0];
-        if (sortByIndexZero === "-") {
-          queryBuilder.orderBy(sortBy.substring(1), "desc");
-        } else {
-          queryBuilder.orderBy(sortBy, "asc");
-        }
+      if (req.sortBy.field && req.sortBy.order) {
+        queryBuilder.orderBy(req.sortBy.field, req.sortBy.order);
       }
       // Pagination
       queryBuilder.limit(limit).offset(offset);
