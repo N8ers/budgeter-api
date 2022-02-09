@@ -13,7 +13,7 @@ router.get("/", sortQueryBuilder, async (req, res) => {
     .from("expense")
     .modify((queryBuilder) => {
       // Sorting
-      if (req.sortBy.field && req.sortBy.order) {
+      if (req.sortBy?.field && req.sortBy?.order) {
         queryBuilder.orderBy(req.sortBy.field, req.sortBy.order);
       }
       // Pagination

@@ -4,6 +4,7 @@ const {
   validateCategoryQueryParams,
   validateDateRangeQueryParams,
 } = require("../../middleware/requestValidation");
+const { sortQueryBuilder } = require("../../middleware/sort");
 
 const router = require("express").Router();
 
@@ -16,20 +17,33 @@ router.get("/", async (req, res) => {
 // Get User By Id
 router.get("/:id", async (req, res) => {
   const userId = req.params.id;
-  const result = await knex.select("*").from("user").where({ id: userId });
-  res.status(200).send(result);
+  const result = await knex
+    .select("*")
+    .from("user")
+    .where({ id: userId })
+    .catch((error) => {
+      res.status(500).send(`${error.message}. \n${error.hint}`);
+    });
+  if (!result.length) {
+    res.status(500).send(`User ${userId}, may not exist.`);
+  } else {
+    res.status(200).send(result);
+  }
 });
 
 // Get User Expenses
 router.get(
-  "/:id/expenses",
+  "/:userId/expenses",
+  sortQueryBuilder,
   validateDateRangeQueryParams,
   validateCategoryQueryParams,
   async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.params.userId;
     const startDate = req.query.startDate || null;
     const endDate = req.query.endDate || null;
     const categoryId = req.query.categoryId || null;
+    const limit = req?.query?.limit || 5;
+    const offset = req?.query?.offset || 1;
 
     const userExpenses = await knex
       .select("*")
@@ -44,8 +58,20 @@ router.get(
         if (categoryId) {
           queryBuilder.where({ category_id: categoryId });
         }
+
+        // Sorting
+        if (req.sortBy?.field && req.sortBy?.order) {
+          queryBuilder.orderBy(req.sortBy.field, req.sortBy.order);
+        }
+
+        // Pagination
+        queryBuilder.limit(limit).offset(offset);
+      })
+      .catch((error) => {
+        res.status(500).send(`{error.message}. \n${error.hint}`);
       });
-    console.log("userExpenses ", userExpenses);
+
+    res.status(200).send(userExpenses);
   }
 );
 
