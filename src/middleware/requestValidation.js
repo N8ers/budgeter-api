@@ -1,6 +1,6 @@
 const { isMatch } = require("date-fns");
 
-const knex = require("../config/config");
+const knex = require("../../config/config");
 
 const validateDateFormat = function (date) {
   // Format to YYYY-MM-DD for Postgres

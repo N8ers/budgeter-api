@@ -3,8 +3,8 @@ const knex = require("../../config/config");
 const {
   validateCategoryQueryParams,
   validateDateRangeQueryParams,
-} = require("../../middleware/requestValidation");
-const { sortQueryBuilder } = require("../../middleware/sort");
+} = require("../middleware/requestValidation");
+const { sortQueryBuilder } = require("../middleware/sort");
 
 const router = require("express").Router();
 

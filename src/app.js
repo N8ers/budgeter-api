@@ -2,10 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const routes = {
-  users: require("./user.routes.js"),
-  expenses: require("./expense.routes.js"),
-  vendors: require("./vendor.routes.js"),
-  category: require("./category.routes.js"),
+  users: require("./routes/user.routes.js"),
+  expenses: require("./routes/expense.routes.js"),
+  vendors: require("./routes/vendor.routes.js"),
+  category: require("./routes/category.routes.js"),
 };
 
 const app = express();

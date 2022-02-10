@@ -1,6 +1,6 @@
 const knex = require("../config/config");
 
-const app = require("./routes/app");
+const app = require("./app");
 const PORT = process.env.PORT || 4000;
 
 async function init() {

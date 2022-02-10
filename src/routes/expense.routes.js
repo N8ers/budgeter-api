@@ -2,7 +2,7 @@ const knex = require("../../config/config");
 
 const router = require("express").Router();
 
-const { sortQueryBuilder } = require("../../middleware/sort");
+const { sortQueryBuilder } = require("../middleware/sort");
 
 router.get("/", sortQueryBuilder, async (req, res) => {
   const limit = req?.query?.limit || 5;
