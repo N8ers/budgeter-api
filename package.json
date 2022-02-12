@@ -6,7 +6,7 @@
   "jest": "./jest.config.js",
   "scripts": {
     "test": "jest",
-    "dev": "nodemon src/server.js",
+    "dev": "NODE_ENV=development nodemon src/server.js",
     "start": "node src/server.js",
     "migrate-up": "knex migrate:up",
     "migrate-down": "knex migrate:down",
