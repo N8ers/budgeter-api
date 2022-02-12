@@ -14,9 +14,6 @@ jobs:
       postgres:
         image: postgres
 
-        env:
-          env: test
-
     steps:
       - name: Checkout repo code
         uses: actions/checkout@v2
@@ -26,6 +23,8 @@ jobs:
 
       - name: Connect to PostgreSQL
         run: npx knex migrate:latest
+        env:
+          - test
 
       - name: Run tests
         run: npm run test
