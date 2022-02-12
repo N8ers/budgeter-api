@@ -8,10 +8,35 @@ const { sortQueryBuilder } = require("../middleware/sort");
 
 const router = require("express").Router();
 
+// Create User
+router.post("/", async (req, res) => {
+  const [result] = await knex("user")
+    .insert({ name: req.body.name })
+    .returning(["id", "name"]);
+  res.status(200).json(result);
+});
+
+// Update User
+router.put("/", async (req, res) => {
+  const [result] = await knex("user")
+    .update({ name: req.body.name })
+    .where({ id: req.body.id })
+    .returning(["id", "name"]);
+
+  res.status(200).json(result);
+});
+
+// Delete User
+router.delete("/:id", async (req, res) => {
+  const userId = req.params.id;
+  const [result] = await knex("user").where({ id: userId }).del("id");
+  res.status(200).json(result);
+});
+
 // Get All Users
 router.get("/", async (req, res) => {
   const result = await knex.select("*").from("user");
-  res.status(200).send(result);
+  res.status(200).json(result);
 });
 
 // Get User By Id
@@ -27,7 +52,8 @@ router.get("/:id", async (req, res) => {
   if (!result.length) {
     res.status(500).send(`User ${userId}, may not exist.`);
   } else {
-    res.status(200).send(result);
+    const [user] = result;
+    res.status(200).json(user);
   }
 });
 
@@ -71,7 +97,7 @@ router.get(
         res.status(500).send(`{error.message}. \n${error.hint}`);
       });
 
-    res.status(200).send(userExpenses);
+    res.status(200).json(userExpenses);
   }
 );
 
