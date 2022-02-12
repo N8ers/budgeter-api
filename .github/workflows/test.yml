@@ -21,10 +21,10 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Connect to PostgreSQL
-        run: npx knex migrate:latest
-        env:
-          - test
+      # - name: Connect to PostgreSQL
+      #   run: npx knex migrate:latest
+      #   env:
+      #     - test
 
       - name: Run tests
         run: npm run test
