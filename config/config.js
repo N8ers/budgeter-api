@@ -1,9 +1,9 @@
 const { development, test } = require("../knexfile");
 
-// const env = process.env.NODE_ENV;
-const env = "test";
+const env = process.env.NODE_ENV;
 
-let knexEnv = development;
+// let knexEnv = development;
+let knexEnv = test;
 
 if (env === "test") {
   knexEnv = test;
