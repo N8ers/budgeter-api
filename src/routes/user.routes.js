@@ -1,4 +1,5 @@
 const knex = require("../../config/config");
+const { validateUserSchema } = require("../middleware/schemaValidation");
 
 const {
   validateCategoryQueryParams,
@@ -9,19 +10,22 @@ const { sortQueryBuilder } = require("../middleware/sort");
 const router = require("express").Router();
 
 // Create User
-router.post("/", async (req, res) => {
+router.post("/", validateUserSchema, async (req, res) => {
   const [result] = await knex("user")
     .insert({ name: req.body.name })
     .returning(["id", "name"]);
+
   res.status(200).json(result);
 });
 
 // Update User
-router.put("/", async (req, res) => {
+router.put("/", validateUserSchema, async (req, res) => {
   const [result] = await knex("user")
     .update({ name: req.body.name })
     .where({ id: req.body.id })
     .returning(["id", "name"]);
+
+  console.log("RESILT ", result);
 
   res.status(200).json(result);
 });
