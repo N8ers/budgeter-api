@@ -1,0 +1,28 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    # docker hub image that `container-job` executes in
+    container: node:10.18-jessie
+
+    services:
+      postgres:
+        image: postgres
+
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v2
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Connect to PostgreSQL
+        run: npx knex migrate:latest
+
+      - name: Run tests
+        run: npm run test
