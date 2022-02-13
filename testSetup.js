@@ -4,10 +4,8 @@ module.exports = async () => {
 
   // create test database
   console.log("Attempting creation of db");
-  knex
-    .raw("CREATE DATABASE budgeter_test")
-    .then(() => console.log("CREATED?"))
-    .catch(() => console.log("CATCH"));
+  await knex.raw("CREATE DATABASE budgeter_test");
+  console.log("DB created");
 
   // rollback all migrations
   console.log("Attempting rollback");
