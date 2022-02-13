@@ -13,6 +13,8 @@ jobs:
     services:
       postgres:
         image: postgres
+        env:
+          NODE_ENV: test
 
     steps:
       - name: Checkout repo code
