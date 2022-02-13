@@ -3,8 +3,12 @@ module.exports = async () => {
   const knex = require("./config/config");
 
   // rollback all migrations
+  console.log("Attempting rollback");
   await knex.migrate.rollback([], true);
+  console.log("Rollback succeeded");
 
   // knex migrate:latest
+  console.log("Attempting migration");
   await knex.migrate.latest([]);
+  console.log("migration succeeded");
 };
