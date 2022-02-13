@@ -27,7 +27,7 @@ jobs:
         run: node ci-create-db.js
 
       - name: Migrate db to latest
-      run: npx knex migrate:latest
+        run: npx knex migrate:latest
 
       - name: Run tests
         run: npm run test
