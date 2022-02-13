@@ -6,4 +6,6 @@ const createDB = async function () {
   console.log("DB created");
 };
 
-createDB();
+createDB()
+  .then((m) => console.log("THEN: ", m))
+  .catch((e) => console.log("CATCH: ", e));
