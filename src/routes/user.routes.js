@@ -25,8 +25,6 @@ router.put("/", validateUserSchema, async (req, res) => {
     .where({ id: req.body.id })
     .returning(["id", "name"]);
 
-  console.log("RESILT ", result);
-
   res.status(200).json(result);
 });
 
