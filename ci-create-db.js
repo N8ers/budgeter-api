@@ -6,4 +6,4 @@ const createDB = async function () {
   console.log("DB created");
 };
 
-await createDB();
+createDB();
