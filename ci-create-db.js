@@ -2,15 +2,15 @@ const knex = require("./config/config");
 
 const createDB = async function () {
   console.log("Attempting creation of table");
-  knex.schema
+  await knex.schema
     .createTable("cats", function (table) {
       table.increments();
       table.string("name");
     })
     .then((res) => console.log("TABLE CREATED: ", res))
-    .catch((err) => console.log("TABLE FAILED: ".err));
+    .catch((err) => console.log("TABLE FAILED: ", err));
 
-  knex("cats")
+  await knex("cats")
     .insert({ name: "Tsuki" })
     .returning("*")
     .toString()
