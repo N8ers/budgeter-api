@@ -7,19 +7,21 @@ console.log(
 console.log("ci-create-db.js process.env.NODE_ENV: ", process.env.NODE_ENV);
 
 const createDB = async function () {
-  console.log("Attempting creation of table");
-  await knex.schema
-    .createTable("cats", function (table) {
-      table.increments();
-      table.string("name");
-    })
-    .then((res) => console.log("TABLE CREATED: ", res))
-    .catch((err) => console.log("TABLE FAILED: ", err));
+  // console.log("Attempting creation of table");
+  // await knex.schema
+  //   .createTable("cats", function (table) {
+  //     table.increments();
+  //     table.string("name");
+  //   })
+  //   .then((res) => console.log("TABLE CREATED: ", res))
+  //   .catch((err) => console.log("TABLE FAILED: ", err));
 
-  const insertResult = await knex("cats")
-    .insert({ name: "Tsuki" })
-    .returning("*");
-  console.log("insertResult: ", insertResult);
+  // const insertResult = await knex("cats")
+  //   .insert({ name: "Tsuki" })
+  //   .returning("*");
+  // console.log("insertResult: ", insertResult);
+
+  await knex.seed.run();
 };
 
 createDB()
