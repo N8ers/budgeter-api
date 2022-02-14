@@ -15,19 +15,42 @@ jobs:
         image: postgres
         env:
           NODE_ENV: test
+          POSTGRES_PASSWORD: "2345"
+
+    # steps:
+    #   - name: Checkout repo code
+    #     uses: actions/checkout@v2
+
+    #   - name: Install deps
+    #     run: npm ci
+
+    #   - name: Create PostgreSQL db
+    #     run: node ci-create-db.js
+
+    #   - name: Migrate db to latest
+    #     run: npx knex migrate:latest
+
+    #   - name: Run tests
+    #     run: npm run test
 
     steps:
-      - name: Checkout repo code
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Install deps
+      # Performs a clean installation of all dependencies in the `package.json` file
+      # For more information, see https://docs.npmjs.com/cli/ci.html
+      - name: Install dependencies
         run: npm ci
 
-      - name: Create PostgreSQL db
-        run: node ci-create-db.js
-
-      - name: Migrate db to latest
-        run: npx knex migrate:latest
-
-      - name: Run tests
-        run: npm run test
+      - name: Connect to PostgreSQL
+        # Runs a script that creates a PostgreSQL table, populates
+        # the table with data, and then retrieves the data
+        run: node client.js
+        # Environment variables used by the `client.js` script to create
+        # a new PostgreSQL table.
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
