@@ -38,12 +38,6 @@ on:
   push:
     branches: [main]
 
-# Provide the password for postgres
-env:
-  POSTGRES_PASSWORD: postgres
-  NODE_ENV: ciTest
-  GH_ENV_TEST: hElLo
-
 jobs:
   # Label of the runner job
   runner-job:
@@ -56,7 +50,11 @@ jobs:
       postgres:
         # Docker Hub image
         image: postgres
-
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          NODE_ENV: ciTest
+          GH_ENV_TEST: hElLo
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
