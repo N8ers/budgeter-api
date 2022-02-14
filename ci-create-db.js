@@ -24,5 +24,5 @@ createDB()
   .catch((e) => console.log("CATCH: ", e))
   .finally(() => {
     console.log("killing knex connection");
-    await knex.destroy();
+    knex.destroy();
   });
