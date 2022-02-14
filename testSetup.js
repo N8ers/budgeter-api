@@ -3,9 +3,9 @@ module.exports = async () => {
   const knex = require("./config/config");
 
   // create test database
-  // console.log("Attempting creation of db");
-  // await knex.raw("CREATE DATABASE budgeter_test");
-  // console.log("DB created");
+  console.log("Attempting creation of db");
+  await knex.raw("CREATE DATABASE budgeter_test");
+  console.log("DB created");
 
   // rollback all migrations
   console.log("Attempting rollback");

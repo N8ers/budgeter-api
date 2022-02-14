@@ -1,42 +1,5 @@
-# name: Node.js CI
-
-# on:
-#   push:
-#     branches: [main]
-
-# jobs:
-#   container-job:
-#     runs-on: ubuntu-latest
-#     # docker hub image that `container-job` executes in
-#     container: node:10.18-jessie
-
-#     services:
-#       postgres:
-#         image: postgres
-#         env:
-#           NODE_ENV: test
-
-#     steps:
-#       - name: Checkout repo code
-#         uses: actions/checkout@v2
-
-#       - name: Install deps
-#         run: npm ci
-
-#       - name: Create PostgreSQL db
-#         run: node ci-create-db.js
-
-#       - name: Migrate db to latest
-#         run: npx knex migrate:latest
-
-#       - name: Run tests
-#         run: npm run test
-
-name: Node.js CI
-
-on:
-  push:
-    branches: [main]
+name: PostgreSQL Service Example
+on: push
 
 jobs:
   # Label of the runner job
@@ -53,8 +16,6 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
-          NODE_ENV: ciTest
-          GH_ENV_TEST: hElLo
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -78,7 +39,7 @@ jobs:
       - name: Connect to PostgreSQL
         # Runs a script that creates a PostgreSQL table, populates
         # the table with data, and then retrieves the data
-        run: node ci-create-db.js
+        run: node client.js
         # Environment variables used by the `client.js` script to create
         # a new PostgreSQL table.
         env:
