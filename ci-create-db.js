@@ -1,5 +1,7 @@
 const knex = require("./config/config");
 
+console.log("ci-create-db.js process.env.NODE_ENV: ", process.env.NODE_ENV);
+
 const createDB = async function () {
   console.log("Attempting creation of table");
   await knex.schema
@@ -19,4 +21,8 @@ const createDB = async function () {
 
 createDB()
   .then((m) => console.log("THEN: ", m))
-  .catch((e) => console.log("CATCH: ", e));
+  .catch((e) => console.log("CATCH: ", e))
+  .finally(() => {
+    console.log("killing knex connection");
+    await knex.destroy();
+  });
