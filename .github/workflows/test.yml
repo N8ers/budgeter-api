@@ -19,6 +19,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
+          SECRET_MESSAGE_ONE: helloThere
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -50,3 +51,4 @@ jobs:
           POSTGRES_HOST: localhost
           # The default PostgreSQL port
           POSTGRES_PORT: 5432
+          SECRET_MESSAGE_TWO: helloTherePartTwo

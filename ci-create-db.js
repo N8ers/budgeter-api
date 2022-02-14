@@ -1,5 +1,8 @@
 const { Client } = require("pg");
 
+console.log("process.env.SECRET_MESSAGE_ONE ", process.env.SECRET_MESSAGE_ONE);
+console.log("process.env.SECRET_MESSAGE_TWO ", process.env.SECRET_MESSAGE_TWO);
+
 const pgclient = new Client({
   host: process.env.POSTGRES_HOST,
   port: process.env.POSTGRES_PORT,
