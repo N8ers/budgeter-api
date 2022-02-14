@@ -1,6 +1,10 @@
 const knex = require("./config/config");
 
-console.log("ci-create-db.js process.env.NODE_ENV: ", process.env.NODE_ENV);
+console.log(
+  "ci-create-db.js process.env.GH_ENV_TEST: ",
+  process.env.GH_ENV_TEST
+);
+console.log("ci-create-db.js process.env.CI: ", process.env.CI);
 
 const createDB = async function () {
   console.log("Attempting creation of table");
@@ -14,8 +18,7 @@ const createDB = async function () {
 
   const insertResult = await knex("cats")
     .insert({ name: "Tsuki" })
-    .returning("*")
-    .toString();
+    .returning("*");
   console.log("insertResult: ", insertResult);
 };
 
