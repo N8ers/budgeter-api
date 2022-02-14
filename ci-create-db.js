@@ -1,40 +1,31 @@
-const { Client } = require("pg");
+const knex = require("./config/config");
 
-console.log("process.env.SECRET_MESSAGE_ONE ", process.env.SECRET_MESSAGE_ONE);
-console.log("process.env.SECRET_MESSAGE_TWO ", process.env.SECRET_MESSAGE_TWO);
+console.log(
+  "ci-create-db.js process.env.SECRET_MESSAGE: ",
+  process.env.SECRET_MESSAGE
+);
+console.log("ci-create-db.js process.env.NODE_ENV: ", process.env.NODE_ENV);
 
-const pgclient = new Client({
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  user: "postgres",
-  password: "postgres",
-  database: "postgres",
-});
+const createDB = async function () {
+  console.log("Attempting creation of table");
+  await knex.schema
+    .createTable("cats", function (table) {
+      table.increments();
+      table.string("name");
+    })
+    .then((res) => console.log("TABLE CREATED: ", res))
+    .catch((err) => console.log("TABLE FAILED: ", err));
 
-pgclient.connect();
+  const insertResult = await knex("cats")
+    .insert({ name: "Tsuki" })
+    .returning("*");
+  console.log("insertResult: ", insertResult);
+};
 
-const table =
-  "CREATE TABLE student(id SERIAL PRIMARY KEY, firstName VARCHAR(40) NOT NULL, lastName VARCHAR(40) NOT NULL, age INT, address VARCHAR(80), email VARCHAR(40))";
-const text =
-  "INSERT INTO student(firstname, lastname, age, address, email) VALUES($1, $2, $3, $4, $5) RETURNING *";
-const values = [
-  "Mona the",
-  "Octocat",
-  9,
-  "88 Colin P Kelly Jr St, San Francisco, CA 94107, United States",
-  "octocat@github.com",
-];
-
-pgclient.query(table, (err, res) => {
-  if (err) throw err;
-});
-
-pgclient.query(text, values, (err, res) => {
-  if (err) throw err;
-});
-
-pgclient.query("SELECT * FROM student", (err, res) => {
-  if (err) throw err;
-  console.log(err, res.rows); // Print the data in student table
-  pgclient.end();
-});
+createDB()
+  .then((m) => console.log("THEN: ", m))
+  .catch((e) => console.log("CATCH: ", e))
+  .finally(() => {
+    console.log("killing knex connection");
+    knex.destroy();
+  });

@@ -9,6 +9,10 @@ if (env === "test") {
   knexEnv = test;
 }
 
+if (env === "ciTest") {
+  knexEnv = ciTest;
+}
+
 const knex = require("knex")(knexEnv);
 
 knex

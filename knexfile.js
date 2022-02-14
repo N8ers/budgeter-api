@@ -48,7 +48,7 @@ module.exports = {
   //     tableName: "knex_migrations",
   //   },
   // },
-  development: {
+  ciTest: {
     client: "postgresql",
     connection: {
       host: process.env.POSTGRES_HOST,
