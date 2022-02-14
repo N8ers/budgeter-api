@@ -10,16 +10,11 @@ const createDB = async function () {
     .then((res) => console.log("TABLE CREATED: ", res))
     .catch((err) => console.log("TABLE FAILED: ", err));
 
-  await knex("cats")
+  const insertResult = await knex("cats")
     .insert({ name: "Tsuki" })
     .returning("*")
-    .toString()
-    .then((res) => {
-      console.log("THEN: ", res);
-    })
-    .catch((err) => {
-      console.log("ERR: ", res);
-    });
+    .toString();
+  console.log("insertResult: ", insertResult);
 };
 
 createDB()
