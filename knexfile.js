@@ -31,7 +31,9 @@ module.exports = {
   //     tableName: "knex_migrations",
   //   },
   // },
-  test: {
+
+  // NOT actually development - just seeing if that is whats used in the ci
+  development: {
     client: "postgresql",
     connection: {
       host: process.env.POSTGRES_HOST,
