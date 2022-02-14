@@ -10,4 +10,12 @@ if (env === "test") {
 
 const knex = require("knex")(knexEnv);
 
+knex
+  .raw("select 1+1 as result")
+  .then(function () {
+    // there is a valid connection in the pool
+    console.log("CONNECTED");
+  })
+  .catch((err) => console.log("error " + err));
+
 module.exports = knex;
