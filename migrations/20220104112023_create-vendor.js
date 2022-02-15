@@ -1,4 +1,5 @@
 exports.up = function (knex) {
+  console.log("migration create-vendor");
   return knex.schema.createTable("vendor", function (table) {
     table.increments("id").primary();
     table.string("name", 225);
