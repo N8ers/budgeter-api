@@ -13,4 +13,8 @@ describe("Test connection", () => {
     expect(response.statusCode).toBe(404);
     expect(response.text).toBe("no such route exists");
   });
+
+  test("this test should fail", async () => {
+    expect(2 + 2).toBe(5);
+  });
 });
