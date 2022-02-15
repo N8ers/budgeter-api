@@ -47,10 +47,10 @@ jobs:
           NODE_ENV: ciTest
 
       # Run tests
-     - name: Run tests
-        run: npm run test
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          SECRET_MESSAGE: helloThere
-          NODE_ENV: ciTest
+      - name: Run tests
+          run: npm run test
+          env:
+            POSTGRES_HOST: localhost
+            POSTGRES_PORT: 5432
+            SECRET_MESSAGE: helloThere
+            NODE_ENV: ciTest
