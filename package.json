@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "migrate-up": "knex migrate:up",
     "migrate-down": "knex migrate:down",
+    "migrate-latest": "knex migrate:latest",
     "seed": "knex seed:run"
   },
   "author": "",
