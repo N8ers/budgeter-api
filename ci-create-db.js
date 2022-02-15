@@ -21,7 +21,7 @@ const createDB = async function () {
   //   .returning("*");
   // console.log("insertResult: ", insertResult);
 
-  await knex.seed.run();
+  await knex.migrate.latest();
 };
 
 createDB()
