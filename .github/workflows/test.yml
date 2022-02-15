@@ -48,7 +48,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: npm run test
+        run: npm run ciTest
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432

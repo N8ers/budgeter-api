@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --forceExit",
+    "ciTest": "NODE_ENV=ciTest jest --forceExit",
     "dev": "NODE_ENV=development nodemon src/server.js",
     "start": "node src/server.js",
     "migrate-up": "knex migrate:up",
