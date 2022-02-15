@@ -1,5 +1,4 @@
 exports.up = async function (knex) {
-  console.log("migrate create-category");
   return knex.schema.createTable("category", function (table) {
     table.increments("id").primary();
     table.string("name");

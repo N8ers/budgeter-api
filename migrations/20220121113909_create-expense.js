@@ -1,5 +1,4 @@
 exports.up = function (knex) {
-  console.log("migrate create-expense");
   return knex.schema.createTable("expense", function (table) {
     table.increments("id").primary();
     table.string("description");

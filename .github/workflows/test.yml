@@ -28,29 +28,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # CHANGE THIS TO RUN MIGRATIONS NOT SEED
-      # - name: Connect to PostgreSQL
-      #   run: node ci-create-db.js
-      #   env:
-      #     POSTGRES_HOST: localhost
-      #     POSTGRES_PORT: 5432
-      #     SECRET_MESSAGE: helloThere
-      #     NODE_ENV: ciTest
-
-      # RUN Migrations
       - name: Run migration
         run: npm run migrate-latest
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
-          SECRET_MESSAGE: helloThere
           NODE_ENV: ciTest
 
-      # Run tests
       - name: Run tests
         run: npm run ciTest
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
-          SECRET_MESSAGE: helloThere
           NODE_ENV: ciTest

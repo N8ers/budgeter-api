@@ -1,5 +1,4 @@
 exports.up = function (knex) {
-  console.log("migration create-user");
   return knex.schema.createTable("user", function (table) {
     table.increments("id").primary();
     table.string("name", 225).notNullable();
