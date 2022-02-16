@@ -47,7 +47,7 @@ router.delete("/:id", async (req, res) => {
   if (!userExists.length) {
     return res
       .status(400)
-      .json({ message: `User with id ${req.body.id} does not exist.` });
+      .json({ message: `User with id ${req.params.id} does not exist.` });
   }
 
   const [result] = await knex("user").where({ id: userId }).del("id");
@@ -68,10 +68,10 @@ router.get("/:id", async (req, res) => {
     .from("user")
     .where({ id: userId })
     .catch((error) => {
-      res.status(500).send(`${error.message}. \n${error.hint}`);
+      res.status(500).json({ message: `${error.message}. \n${error.hint}` });
     });
   if (!result.length) {
-    res.status(500).send(`User ${userId}, may not exist.`);
+    return res.status(500).json({ message: `User ${userId} may not exist.` });
   } else {
     const [user] = result;
     res.status(200).json(user);
