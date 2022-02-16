@@ -14,9 +14,4 @@ if (env === "ciTest") {
 
 const knex = require("knex")(knexEnv);
 
-knex
-  .raw("select 1+1 as result")
-  .then(() => console.log("DB CONNECTED"))
-  .catch((err) => console.log("error " + err));
-
 module.exports = knex;
