@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
 const routes = {
-  users: require("./routes/user.routes.js"),
+  users: require("./routes/user.routes/index"),
   expenses: require("./routes/expense.routes.js"),
   vendors: require("./routes/vendor.routes.js"),
   category: require("./routes/category.routes.js"),
