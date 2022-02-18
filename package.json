@@ -8,9 +8,7 @@
     "ciTest": "NODE_ENV=ciTest jest --forceExit",
     "dev": "NODE_ENV=development nodemon src/server.js",
     "start": "node src/server.js",
-    "migrate-up": "knex migrate:up",
-    "migrate-down": "knex migrate:down",
-    "migrate-latest": "knex migrate:latest",
+    "migrate": "node-pg-migrate",
     "seed": "knex seed:run"
   },
   "author": "",
@@ -23,6 +21,7 @@
     "joi": "^17.6.0",
     "knex": "^0.95.15",
     "morgan": "^1.10.0",
+    "node-pg-migrate": "^6.2.1",
     "pg": "^8.7.1",
     "supertest": "^6.2.2"
   },

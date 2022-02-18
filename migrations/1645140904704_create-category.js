@@ -1,4 +1,10 @@
-exports.up = async function (knex) {
+/* eslint-disable camelcase */
+
+const knex = require("../config/config");
+
+exports.shorthands = undefined;
+
+exports.up = (pgm) => {
   return knex.schema.createTable("category", function (table) {
     table.increments("id").primary();
     table.string("name");
@@ -8,6 +14,6 @@ exports.up = async function (knex) {
   });
 };
 
-exports.down = async function (knex) {
+exports.down = (pgm) => {
   return knex.schema.dropTable("category");
 };

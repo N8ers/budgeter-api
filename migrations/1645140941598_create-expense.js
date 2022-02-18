@@ -1,4 +1,10 @@
-exports.up = function (knex) {
+/* eslint-disable camelcase */
+
+const knex = require("../config/config");
+
+exports.shorthands = undefined;
+
+exports.up = (pgm) => {
   return knex.schema.createTable("expense", function (table) {
     table.increments("id").primary();
     table.string("description");
@@ -15,6 +21,6 @@ exports.up = function (knex) {
   });
 };
 
-exports.down = function (knex) {
+exports.down = (pgm) => {
   return knex.schema.dropTable("expense");
 };
