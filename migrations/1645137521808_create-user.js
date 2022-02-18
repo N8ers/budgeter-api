@@ -5,6 +5,7 @@ const knex = require("../config/config");
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
+  console.log("migration 1");
   return knex.schema.createTable("user", function (table) {
     table.increments("id").primary();
     table.string("name", 225).notNullable();

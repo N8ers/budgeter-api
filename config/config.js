@@ -12,6 +12,7 @@ if (env === "ciTest") {
   knexEnv = ciTest;
 }
 
+console.log("knexEnv ", knexEnv);
 const knex = require("knex")(knexEnv);
 
 module.exports = knex;

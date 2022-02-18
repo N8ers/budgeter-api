@@ -5,6 +5,7 @@ const knex = require("../config/config");
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
+  console.log("migration 4");
   return knex.schema.createTable("expense", function (table) {
     table.increments("id").primary();
     table.string("description");
