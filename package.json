@@ -8,18 +8,17 @@
     "ciTest": "NODE_ENV=ciTest jest --forceExit",
     "dev": "NODE_ENV=development nodemon src/server.js",
     "start": "node src/server.js",
-    "migrate": "node-pg-migrate",
-    "seed": "knex seed:run"
+    "migrate": "node-pg-migrate --config-value \"database.connection\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.1",
+    "config": "^3.3.7",
     "date-fns": "^2.28.0",
     "express": "^4.17.2",
     "jest": "^27.5.1",
     "joi": "^17.6.0",
-    "knex": "^0.95.15",
     "morgan": "^1.10.0",
     "node-pg-migrate": "^6.2.1",
     "pg": "^8.7.1",

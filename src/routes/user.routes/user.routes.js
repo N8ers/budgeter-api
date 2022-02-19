@@ -1,17 +1,24 @@
-const knex = require("../../../config/config");
-
+const db = require("../../db");
 const { validateUserSchema } = require("../../middleware/schemaValidation");
 
 const router = require("express").Router();
 
+// CONSIDER A 'user exists' middleware
+// that way for a delete (or whatever else) we could say 'user id ___ delete'
+// and also, 'user id ___ doesnt exist'
+
 // Create User
 router.post("/", validateUserSchema, async (req, res) => {
-  try {
-    let [result] = await knex("user")
-      .insert({ name: req.body.name })
-      .returning(["id", "name"]);
+  const query = `
+      INSERT INTO "users" (name)
+      VALUES ($1)
+      RETURNING *;
+    `;
+  const values = [req.body.name];
 
-    return res.status(200).json(result);
+  try {
+    const result = await db.query(query, values);
+    return res.status(200).json(result.rows);
   } catch (error) {
     return res.status(500).json({ message: error });
   }
@@ -19,58 +26,65 @@ router.post("/", validateUserSchema, async (req, res) => {
 
 // Update User
 router.put("/", validateUserSchema, async (req, res) => {
-  const userExists = await knex("user").where({ id: req.body.id });
+  const userId = req.body.id;
+  const userName = req.body.name;
+  const query = `
+    UPDATE users
+    SET name = $1
+    WHERE id = $2
+    RETURNING *;
+  `;
+  const values = [userName, userId];
 
-  if (!userExists.length) {
-    return res
-      .status(400)
-      .json({ message: `User with id ${req.body.id} does not exist.` });
+  try {
+    const result = await db.query(query, values);
+    return res.status(200).json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ message: error });
   }
-
-  const [result] = await knex("user")
-    .update({ name: req.body.name })
-    .where({ id: req.body.id })
-    .returning(["id", "name"]);
-
-  res.status(200).json(result);
 });
 
 // Delete User
 router.delete("/:id", async (req, res) => {
   const userId = req.params.id;
-  const userExists = await knex("user").where({ id: userId });
+  const query = `DELETE FROM users WHERE id = $1`;
+  const values = [userId];
 
-  if (!userExists.length) {
-    return res
-      .status(400)
-      .json({ message: `User with id ${req.params.id} does not exist.` });
+  try {
+    const result = await db.query(query, values);
+    return res.status(200).json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ message: error });
   }
-
-  const [result] = await knex("user").where({ id: userId }).del("id");
-  res.status(200).json(result);
 });
 
 // Get All Users
 router.get("/", async (req, res) => {
-  const result = await knex.select("*").from("user");
-  res.status(200).json(result);
+  const query = `SELECT * FROM users`;
+  const values = [];
+
+  try {
+    const result = await db.query(query, values);
+    return res.status(200).json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
 });
 
 // Get User By Id
 router.get("/:id", async (req, res) => {
   const userId = req.params.id;
-  const result = await knex
-    .select("*")
-    .from("user")
-    .where({ id: userId })
-    .catch((error) => {
-      res.status(500).json({ message: `${error.message}. \n${error.hint}` });
-    });
-  if (!result.length) {
-    return res.status(500).json({ message: `User ${userId} may not exist.` });
-  } else {
-    const [user] = result;
-    res.status(200).json(user);
+  const query = `
+    SELECT * FROM users
+    WHERE users.id = $1;
+  `;
+  const values = [userId];
+
+  try {
+    const result = await db.query(query, values);
+    return res.status(200).json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ message: error });
   }
 });
 
