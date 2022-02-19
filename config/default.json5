@@ -1,0 +1,11 @@
+// dev
+{
+  database: {
+    connection: {
+      user: "postgres",
+      host: "localhost",
+      database: "budgeter",
+      password: "2345",
+    },
+  },
+}
