@@ -3,7 +3,7 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.createTable("vendor", {
+  pgm.createTable("categories", {
     id: "id",
     name: {
       type: "varchar (255)",
@@ -12,11 +12,11 @@ exports.up = (pgm) => {
     user_id: {
       type: "int",
       notNull: true,
-      references: "user",
+      references: "users",
     },
   });
 };
 
 exports.down = (pgm) => {
-  pgm.dropTable("vendor");
+  pgm.dropTable("categories");
 };

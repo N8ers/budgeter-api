@@ -20,17 +20,17 @@ exports.up = (pgm) => {
     user_id: {
       type: "int",
       notNull: true,
-      references: "user",
+      references: "users",
     },
     vendor_id: {
       type: "int",
       notNull: true,
-      references: "vendor",
+      references: "vendors",
     },
     category_id: {
       type: "int",
       notNull: true,
-      references: "category",
+      references: "categories",
     },
   });
 };

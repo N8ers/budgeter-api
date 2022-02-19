@@ -3,7 +3,7 @@
 exports.shorthands = undefined;
 
 exports.up = async (pgm) => {
-  await pgm.createTable("user", {
+  await pgm.createTable("users", {
     id: "id",
     name: {
       type: "varchar(255)",
@@ -13,5 +13,5 @@ exports.up = async (pgm) => {
 };
 
 exports.down = async (pgm) => {
-  await pgm.dropTable("user");
+  await pgm.dropTable("users");
 };
