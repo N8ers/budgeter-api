@@ -32,7 +32,7 @@ module.exports = {
       port: process.env.POSTGRES_PORT,
       database: "postgres",
       user: "postgres",
-      password: "postgres",
+      password: process.env.POSTGRES_PW,
     },
     pool: {
       min: 2,
