@@ -11,9 +11,6 @@ module.exports = {
       min: 2,
       max: 10,
     },
-    migrations: {
-      tableName: "knex_migrations",
-    },
   },
   test: {
     client: "postgresql",
@@ -26,9 +23,6 @@ module.exports = {
     pool: {
       min: 2,
       max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
     },
   },
   ciTest: {
@@ -43,9 +37,6 @@ module.exports = {
     pool: {
       min: 2,
       max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
     },
   },
 };
