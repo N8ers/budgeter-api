@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+require("dotenv").config();
 
 const routes = {
   users: require("./routes/user.routes/index"),

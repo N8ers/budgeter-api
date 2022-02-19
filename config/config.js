@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const { development, test, ciTest } = require("../knexfile");
 
 const env = process.env.NODE_ENV;
