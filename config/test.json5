@@ -1,0 +1,11 @@
+// test
+{
+  database: {
+    connection: {
+      user: "postgres",
+      host: "localhost",
+      database: "budgeter_test",
+      password: "2345",
+    },
+  },
+}
