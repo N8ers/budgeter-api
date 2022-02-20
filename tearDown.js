@@ -12,8 +12,8 @@ module.exports = async () => {
     { migrationName: "1645140941598_create-expenses" },
   ];
 
-  for (file of numberOfMigrationFiles) {
-    console.log("rolling back ", migrationFiles[file]);
+  for (file of migrationFiles) {
+    console.log("rolling back ", file);
     await execSync("npm run migrate down");
   }
 };
