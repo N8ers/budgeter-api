@@ -3,7 +3,7 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.createTable("expense", {
+  pgm.createTable("expenses", {
     id: "id",
     description: {
       type: "varchar (255)",
