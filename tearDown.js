@@ -1,16 +1,19 @@
 const { execSync } = require("child_process");
+const path = require("path");
+const { promises: fs } = require("fs");
 
 module.exports = async () => {
-  // find a better way to do this
-  // probably reach into the migrations folder, cound files
-  // then run function for each file?
+  async function getMigrationFiles() {
+    try {
+      const directoryPath = path.join(__dirname, "migrations");
+      let files = await fs.readdir(directoryPath);
+      return files.reverse();
+    } catch (error) {
+      console.log("Error getting migration files.\n", error);
+    }
+  }
 
-  const migrationFiles = [
-    { migrationName: "1645137521808_create-users" },
-    { migrationName: "1645140814791_create-vendors" },
-    { migrationName: "1645140904704_create-categories" },
-    { migrationName: "1645140941598_create-expenses" },
-  ];
+  const migrationFiles = await getMigrationFiles();
 
   for (file of migrationFiles) {
     console.log("rolling back ", file);
