@@ -1,0 +1,11 @@
+// This config is for GitHub Actions
+{
+  database: {
+    connection: {
+      user: "postgres",
+      host: "localhost",
+      database: "postgres",
+      password: "postgres",
+    },
+  },
+}
