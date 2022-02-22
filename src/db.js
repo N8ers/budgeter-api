@@ -1,19 +1,10 @@
 const { Pool } = require("pg");
+const config = require("config");
 
-const { development, test, ciTest } = require("../config");
+const dbConnection = config.get("database.connection");
+console.log("dbConnection: ", dbConnection);
 
-const env = process.env.NODE_ENV;
-let pgEnv = development;
-
-if (env === "test") {
-  pgEnv = test;
-}
-
-if (env === "ciTest") {
-  pgEnv = ciTest;
-}
-
-const pool = new Pool(pgEnv);
+const pool = new Pool(dbConnection);
 
 module.exports = {
   query: (text, params, callback) => {
