@@ -6,7 +6,7 @@ const routes = {
   users: require("./routes/user.routes/index"),
   expenses: require("./routes/expense.routes.js"),
   vendors: require("./routes/vendor.routes.js"),
-  category: require("./routes/category.routes.js"),
+  categories: require("./routes/category.routes.js"),
 };
 
 const app = express();
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 app.use("/users", routes.users);
 app.use("/expenses", routes.expenses);
 app.use("/vendors", routes.vendors);
-app.use("/category", routes.category);
+app.use("/categories", routes.categories);
 
 // catch all routes that don't exist
 app.get("*", function (req, res) {
