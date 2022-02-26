@@ -4,12 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --forceExit",
+    "test": "jest --verbose ",
     "ciTest": "NODE_ENV=ciTest jest --forceExit",
     "dev": "NODE_ENV=development nodemon src/server.ts",
     "start": "node dist/server.js",
     "migrate": "node-pg-migrate --config-value \"database.connection\"",
-    "build": "tsc -p"
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
