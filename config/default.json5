@@ -1,6 +1,7 @@
 // dev
 {
   database: {
+    tsconfig: "../tsconfig.json",
     connection: {
       user: "postgres",
       host: "localhost",
