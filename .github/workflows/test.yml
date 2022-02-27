@@ -1,8 +1,6 @@
 name: Node.js CI
 
-on:
-  push:
-    branches: [main]
+on: [push]
 
 jobs:
   runner-job:
@@ -27,6 +25,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run build
+        run: npm run build
 
       - name: Run migration
         run: npm run migrate up
