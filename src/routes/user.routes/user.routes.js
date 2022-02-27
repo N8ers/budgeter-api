@@ -1,23 +1,18 @@
 const db = require("../../db");
 const { validateUserSchema } = require("../../middleware/schemaValidation");
+const { createUser } = require("../../controllers/user.controller");
 
 const router = require("express").Router();
 
 // Create User
 router.post("/", validateUserSchema, async (req, res) => {
-  const query = `
-      INSERT INTO "users" (name)
-      VALUES ($1)
-      RETURNING *;
-    `;
-  const values = [req.body.name];
+  const { name } = req.body;
 
   try {
-    const results = await db.query(query, values);
-    const result = results.rows[0];
+    const result = await createUser(name);
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: error.message });
   }
 });
 
