@@ -12,11 +12,9 @@ router.post("/", validateCategorySchema, async (req, res) => {
     RETURNING *;
   `;
   const values = [categoryName, user_id];
-  console.log(query, values);
 
   try {
     const results = await db.query(query, values);
-    console.log("results ", results);
     const result = results.rows[0];
     return res.status(200).json(result);
   } catch (error) {
