@@ -1,7 +1,6 @@
 const db = require("../db");
 
 const createUser = async function (name) {
-  console.log("name ", name);
   const query = `
       INSERT INTO "users" (name)
       VALUES ($1)
@@ -18,6 +17,15 @@ const createUser = async function (name) {
   }
 };
 
+const updateUser = async function () {};
+
+const getUsers = async function () {};
+
+const getUserById = async function () {};
+
 module.exports = {
   createUser,
+  updateUser,
+  getUsers,
+  getUserById,
 };
