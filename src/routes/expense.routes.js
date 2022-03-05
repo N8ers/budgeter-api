@@ -1,27 +1,78 @@
-// const knex = require("../../config");
+const db = require("../db");
+const { validateExpenseSchema } = require("../middleware/schemaValidation");
 
 const router = require("express").Router();
 
-const { sortQueryBuilder } = require("../middleware/sort");
+// Valid::  user_id: 1, vendor_id: _, category_id: _
 
-router.get("/", sortQueryBuilder, async (req, res) => {
-  // const limit = req?.query?.limit || 5;
-  // const offset = req?.query?.offset || 1;
-  // const result = await knex
-  //   .select("*")
-  //   .from("expense")
-  //   .modify((queryBuilder) => {
-  //     // Sorting
-  //     if (req.sortBy?.field && req.sortBy?.order) {
-  //       queryBuilder.orderBy(req.sortBy.field, req.sortBy.order);
-  //     }
-  //     // Pagination
-  //     queryBuilder.limit(limit).offset(offset);
-  //   })
-  //   .catch((error) => {
-  //     res.status(500).send(`${error.message}. \n${error.hint}`);
-  //   });
-  // res.status(200).send(result);
+router.post("/", validateExpenseSchema, async (req, res) => {
+  const {
+    description,
+    date,
+    ammount,
+    user_id,
+    vendor_id,
+    category_id,
+  } = req.body;
+  const query = `
+    INSERT INTO "expenses" 
+      (description, date, ammount, user_id, vendor_id, category_id)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *;
+  `;
+  const values = [description, date, ammount, user_id, vendor_id, category_id];
+
+  try {
+    const results = await db.query(query, values);
+    const result = results.rows[0];
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+});
+
+router.put("/", validateExpenseSchema, async (req, res) => {
+  // SHOULD THIS BE A PATCH NOT A PUT?
+});
+
+router.delete("/:id", async (req, res) => {
+  const expenseId = req.params.id;
+  const query = `DELETE FROM expenses WHERE id = $1 RETURNING *;`;
+  const values = [expenseId];
+
+  try {
+    const results = await db.query(query, values);
+    const result = results.rows[0];
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+});
+
+router.get("/", async (req, res) => {
+  const query = `SELECT * FROM expenses`;
+  const values = [];
+
+  try {
+    const results = await db.queru(query, values);
+    return res.status(500).json(results.rows);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  const expenseId = req.params.id;
+  const query = `SELECT * FROM expenses WHERE expenses.id = $1;`;
+  const values = [expenseId];
+
+  try {
+    const results = await db.query(query, values);
+    const result = results.rows[0];
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
 });
 
 module.exports = router;
