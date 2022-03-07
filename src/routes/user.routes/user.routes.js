@@ -76,10 +76,14 @@ router.get("/:id", async (req, res) => {
 
   try {
     const results = await db.query(query, values);
+    if (!results.rowCount) {
+      throw new Error("Record not found");
+    }
     const result = results.rows[0];
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    const errorMessage = error?.message ? error.message : error;
+    return res.status(500).json({ message: errorMessage });
   }
 });
 
