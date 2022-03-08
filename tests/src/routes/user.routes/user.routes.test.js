@@ -81,8 +81,8 @@ describe("User", () => {
 
       const getResponse = await request(app)
         .get(`/users/${postResponseId}`)
-        .expect(200);
-      expect(getResponse.body).toStrictEqual("");
+        .expect(500);
+      expect(getResponse.body).toStrictEqual({ message: "Record not found" });
     });
   });
 
