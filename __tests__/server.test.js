@@ -13,3 +13,9 @@ describe("Test connection", () => {
     expect(response.text).toBe("no such route exists");
   });
 });
+
+// describe("Server.ts tests", () => {
+//   test("Math test", () => {
+//     expect(2 + 2).toBe(4);
+//   });
+// });
