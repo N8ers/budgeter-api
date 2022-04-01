@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
+    "testCoverage": "jest --coverage",
     "ciTest": "NODE_ENV=ciTest jest --forceExit",
     "dev": "NODE_ENV=development nodemon src/server.ts",
     "start": "node dist/server.js",
